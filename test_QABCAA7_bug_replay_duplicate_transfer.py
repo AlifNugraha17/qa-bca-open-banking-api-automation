@@ -1,11 +1,12 @@
 """
-TIKET JIRA: QABCA-7 (FINANCIAL IDEMPOTENCY BUG TEST)
+TIKET JIRA: QABCAA-7 (FINANCIAL IDEMPOTENCY BUG TEST)
 Summary: [Transaction Idempotency Bug] System processes duplicate transfer request with identical Transaction ID
 Endpoint: POST /banking/v3/corporates/{CorporateID}/transfers
 """
 
 import sys
 import os
+import uuid
 import json
 import requests
 from bca_auth_helper import BCAAuthHelper
@@ -18,9 +19,9 @@ if sys.platform == "win32":
         pass
 
 
-def test_QABCA7_bug_replay_duplicate_transfer():
+def test_QABCAA7_bug_replay_duplicate_transfer():
     print("\n=======================================================================")
-    print("🚀 MENJALANKAN TEST TIKET QABCA-7: Replay Attack & Idempotency Duplicate")
+    print("🚀 MENJALANKAN TEST TIKET QABCAA-7: Replay Attack & Idempotency Duplicate")
     print("=======================================================================")
 
     start_bca_mock_server(port=8080)
@@ -37,11 +38,11 @@ def test_QABCA7_bug_replay_duplicate_transfer():
     relative_path = f"/banking/v3/corporates/{corp_id}/transfers"
     endpoint = f"http://127.0.0.1:8080{relative_path}"
 
-    # Gunakan TransactionID tetap untuk menguji deteksi duplikasi (Replay Attack)
-    fixed_trx_id = "TRX-REPLAY-ATTACK-007"
+    # Gunakan TransactionID yang sama persis di step 1 dan step 2 untuk menguji deteksi duplikasi (Replay Attack)
+    replay_trx_id = f"TRX-REPLAY-{uuid.uuid4().hex[:8].upper()}"
 
     payload = {
-        "TransactionID": fixed_trx_id,
+        "TransactionID": replay_trx_id,
         "SourceAccountNumber": "0201245678",
         "BeneficiaryAccountNumber": "0209876543",
         "Amount": 500000.00,  # Rp 500.000
@@ -52,14 +53,14 @@ def test_QABCA7_bug_replay_duplicate_transfer():
     headers = auth_helper.build_bca_headers("POST", relative_path, access_token, payload)
 
     # --- REQUEST PERTAMA (Transaksi Sah) ---
-    print(f"\n📡 [Step 1] Mengirim Request Transfer Pertama (TransactionID: {fixed_trx_id})")
+    print(f"\n📡 [Step 1] Mengirim Request Transfer Pertama (TransactionID: {replay_trx_id})")
     res1 = requests.post(endpoint, headers=headers, json=payload, timeout=5)
     print(f"📥 Response Pertama: {res1.status_code} {res1.reason}")
     print(json.dumps(res1.json(), indent=2))
     assert res1.status_code == 200, "Request pertama harus sukses 200 OK"
 
     # --- REQUEST KEDUA (Duplikasi / Serangan Replay Attack dengan ID yang sama persis) ---
-    print(f"\n📡 [Step 2] Mengirim Ulang Request KEDUA dengan TransactionID SAMA ({fixed_trx_id})")
+    print(f"\n📡 [Step 2] Mengirim Ulang Request KEDUA dengan TransactionID SAMA ({replay_trx_id})")
     res2 = requests.post(endpoint, headers=headers, json=payload, timeout=5)
     print(f"📥 Response Kedua: {res2.status_code} {res2.reason}")
     print(json.dumps(res2.json(), indent=2))
@@ -80,4 +81,4 @@ def test_QABCA7_bug_replay_duplicate_transfer():
 
 
 if __name__ == "__main__":
-    test_QABCA7_bug_replay_duplicate_transfer()
+    test_QABCAA7_bug_replay_duplicate_transfer()

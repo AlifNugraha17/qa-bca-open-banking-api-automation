@@ -1,5 +1,5 @@
 """
-TIKET JIRA: QABCA-6 (SECURITY DEFECT TEST)
+TIKET JIRA: QABCAA-6 (SECURITY DEFECT TEST)
 Summary: [Security Defect] API endpoint fails to reject request when HMAC-SHA256 signature is manipulated
 Endpoint: POST /banking/v3/corporates/{CorporateID}/transfers
 """
@@ -19,9 +19,9 @@ if sys.platform == "win32":
         pass
 
 
-def test_QABCA6_bug_tampered_signature():
+def test_QABCAA6_bug_tampered_signature():
     print("\n=======================================================================")
-    print("🚀 MENJALANKAN TEST TIKET QABCA-6: Security Audit (Tampered HMAC Signature)")
+    print("🚀 MENJALANKAN TEST TIKET QABCAA-6: Security Audit (Tampered HMAC Signature)")
     print("=======================================================================")
 
     start_bca_mock_server(port=8080)
@@ -78,4 +78,4 @@ def test_QABCA6_bug_tampered_signature():
 
 
 if __name__ == "__main__":
-    test_QABCA6_bug_tampered_signature()
+    test_QABCAA6_bug_tampered_signature()

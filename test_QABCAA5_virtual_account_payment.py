@@ -1,5 +1,5 @@
 """
-TIKET JIRA: QABCA-5
+TIKET JIRA: QABCAA-5
 Summary: [Virtual Account] Verify end-to-end inquiry and bill payment settlement for BCA Virtual Account
 Endpoints: POST /va/v1/inquiry & POST /va/v1/payment
 """
@@ -18,9 +18,9 @@ if sys.platform == "win32":
         pass
 
 
-def test_QABCA5_virtual_account_payment():
+def test_QABCAA5_virtual_account_payment():
     print("\n=======================================================================")
-    print("🚀 MENJALANKAN TEST TIKET QABCA-5: BCA Virtual Account (Inquiry & Payment)")
+    print("🚀 MENJALANKAN TEST TIKET QABCAA-5: BCA Virtual Account (Inquiry & Payment)")
     print("=======================================================================")
 
     start_bca_mock_server(port=8080)
@@ -78,4 +78,4 @@ def test_QABCA5_virtual_account_payment():
 
 
 if __name__ == "__main__":
-    test_QABCA5_virtual_account_payment()
+    test_QABCAA5_virtual_account_payment()

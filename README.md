@@ -43,7 +43,7 @@ The suite ships with a **self-contained Core Banking Mock Server**, so every tes
 
 ```mermaid
 flowchart LR
-    T["Pytest Test Cases<br/>(QABCA-1 ... QABCA-7)"] --> H["BCAAuthHelper<br/>OAuth + HMAC Signer"]
+    T["Pytest Test Cases<br/>(QABCAA-1 ... QABCAA-7)"] --> H["BCAAuthHelper<br/>OAuth + HMAC Signer"]
     H --> R["HTTP Request<br/>(requests)"]
     R --> M["BCA Mock Server<br/>127.0.0.1:8080"]
     M --> V{"Security Gate<br/>Signature + Idempotency"}
@@ -52,7 +52,7 @@ flowchart LR
     V -- duplicate --> E2["409 Duplicate Transaction"]
 ```
 
-**Token chaining:** `QABCA-1` stores the issued bearer token in `bca_active_token.txt`, which is reused by the subsequent tests (balance, statement, transfer, VA). If the file is missing, a default sandbox token is used.
+**Token chaining:** `QABCAA-1` stores the issued bearer token in `bca_active_token.txt`, which is reused by the subsequent tests (balance, statement, transfer, VA). If the file is missing, a default sandbox token is used.
 
 ---
 
@@ -64,13 +64,13 @@ qa-bca-open-banking-api-automation/
 ├── bca_mock_server.py                          # Core banking simulator (SNAP BI & API V3 endpoints)
 ├── bca_active_token.txt                        # Bearer token shared across test cases
 ├── requirements.txt                            # Python dependencies
-├── test_QABCA1_oauth_token.py                  # OAuth 2.0 token generation
-├── test_QABCA2_balance_inquiry.py              # Balance inquiry
-├── test_QABCA3_account_statement.py            # Account statement / mutation history
-├── test_QABCA4_fund_transfer_intra.py          # Intra-bank fund transfer
-├── test_QABCA5_virtual_account_payment.py      # VA inquiry & payment settlement
-├── test_QABCA6_bug_tampered_signature.py       # Security: tampered HMAC signature
-└── test_QABCA7_bug_replay_duplicate_transfer.py  # Security: replay attack / idempotency
+├── test_QABCAA1_oauth_token.py                  # OAuth 2.0 token generation
+├── test_QABCAA2_balance_inquiry.py              # Balance inquiry
+├── test_QABCAA3_account_statement.py            # Account statement / mutation history
+├── test_QABCAA4_fund_transfer_intra.py          # Intra-bank fund transfer
+├── test_QABCAA5_virtual_account_payment.py      # VA inquiry & payment settlement
+├── test_QABCAA6_bug_tampered_signature.py       # Security: tampered HMAC signature
+└── test_QABCAA7_bug_replay_duplicate_transfer.py  # Security: replay attack / idempotency
 ```
 
 ---
@@ -79,13 +79,13 @@ qa-bca-open-banking-api-automation/
 
 | Jira ID | Banking Module | Test Scenario & Summary | Issue Type | Test Script |
 | :--- | :--- | :--- | :--- | :--- |
-| **QABCA-1** | OAuth 2.0 Security | Verify successful B2B client credentials authorization and bearer token generation | `Task` | `test_QABCA1_oauth_token.py` |
-| **QABCA-2** | Balance Inquiry | Verify customer ledger and available balance inquiry with valid HMAC signature | `Task` | `test_QABCA2_balance_inquiry.py` |
-| **QABCA-3** | Account Statement | Verify historical transaction history and statement retrieval by date range | `Task` | `test_QABCA3_account_statement.py` |
-| **QABCA-4** | Fund Transfer | Verify intra-bank transfer execution between BCA accounts with unique idempotency key | `Task` | `test_QABCA4_fund_transfer_intra.py` |
-| **QABCA-5** | Virtual Account | Verify end-to-end inquiry and bill payment settlement for BCA Virtual Account | `Task` | `test_QABCA5_virtual_account_payment.py` |
-| **QABCA-6** | Cryptographic Security | API endpoint fails to reject request when HMAC-SHA256 signature is manipulated | `Bug` 🔴 | `test_QABCA6_bug_tampered_signature.py` |
-| **QABCA-7** | Financial Idempotency | System processes duplicate transfer request with identical Transaction ID (Replay Attack) | `Bug` 🔴 | `test_QABCA7_bug_replay_duplicate_transfer.py` |
+| **QABCAA-1** | OAuth 2.0 Security | Verify successful B2B client credentials authorization and bearer token generation | `Task` | `test_QABCAA1_oauth_token.py` |
+| **QABCAA-2** | Balance Inquiry | Verify customer ledger and available balance inquiry with valid HMAC signature | `Task` | `test_QABCAA2_balance_inquiry.py` |
+| **QABCAA-3** | Account Statement | Verify historical transaction history and statement retrieval by date range | `Task` | `test_QABCAA3_account_statement.py` |
+| **QABCAA-4** | Fund Transfer | Verify intra-bank transfer execution between BCA accounts with unique idempotency key | `Task` | `test_QABCAA4_fund_transfer_intra.py` |
+| **QABCAA-5** | Virtual Account | Verify end-to-end inquiry and bill payment settlement for BCA Virtual Account | `Task` | `test_QABCAA5_virtual_account_payment.py` |
+| **QABCAA-6** | Cryptographic Security | API endpoint fails to reject request when HMAC-SHA256 signature is manipulated | `Bug` 🔴 | `test_QABCAA6_bug_tampered_signature.py` |
+| **QABCAA-7** | Financial Idempotency | System processes duplicate transfer request with identical Transaction ID (Replay Attack) | `Bug` 🔴 | `test_QABCAA7_bug_replay_duplicate_transfer.py` |
 
 ---
 
@@ -133,13 +133,13 @@ python bca_mock_server.py
 
 ## 🐞 Bug Reports
 
-### QABCA-6 — Tampered HMAC Signature Accepted
+### QABCAA-6 — Tampered HMAC Signature Accepted
 - **Severity:** Critical 🔴 &nbsp;|&nbsp; **Category:** Cryptographic Security
 - **Steps:** Send a valid transfer request but replace `X-BCA-Signature` with a corrupted/tampered value.
 - **Expected:** `401 Unauthorized` with `ErrorCode: ERR-BCA-INVALID-SIGNATURE`.
 - **Risk if failed:** Man-in-the-middle can alter amount / beneficiary without detection.
 
-### QABCA-7 — Replay Attack / Duplicate Transfer Processed
+### QABCAA-7 — Replay Attack / Duplicate Transfer Processed
 - **Severity:** Critical 🔴 &nbsp;|&nbsp; **Category:** Financial Idempotency
 - **Steps:** Send the same transfer payload twice with identical `TransactionID` (`TRX-REPLAY-ATTACK-007`).
 - **Expected:** 1st request `200 OK`, 2nd request `409 Conflict` with `ErrorCode: ERR-BCA-DUPLICATE-TRANSACTION`.
@@ -160,8 +160,8 @@ pip install -r requirements.txt
 
 ### 2. Run Individual API Tests
 ```bash
-python test_QABCA1_oauth_token.py
-python test_QABCA2_balance_inquiry.py
+python test_QABCAA1_oauth_token.py
+python test_QABCAA2_balance_inquiry.py
 ```
 
 ### 3. Run Entire Suite via Pytest
@@ -184,15 +184,15 @@ pytest -v -s
 ## ✅ Test Execution Result
 
 ```text
-test_QABCA1_oauth_token.py::test_QABCA1_oauth_token                                     PASSED
-test_QABCA2_balance_inquiry.py::test_QABCA2_balance_inquiry                             PASSED
-test_QABCA3_account_statement.py::test_QABCA3_account_statement                         PASSED
-test_QABCA4_fund_transfer_intra.py::test_QABCA4_fund_transfer_intra                     PASSED
-test_QABCA5_virtual_account_payment.py::test_QABCA5_virtual_account_payment             PASSED
-test_QABCA6_bug_tampered_signature.py::test_QABCA6_bug_tampered_signature               PASSED
-test_QABCA7_bug_replay_duplicate_transfer.py::test_QABCA7_bug_replay_duplicate_transfer PASSED
+test_QABCAA1_oauth_token.py::test_QABCAA1_oauth_token                                     PASSED
+test_QABCAA2_balance_inquiry.py::test_QABCAA2_balance_inquiry                             PASSED
+test_QABCAA3_account_statement.py::test_QABCAA3_account_statement                         PASSED
+test_QABCAA4_fund_transfer_intra.py::test_QABCAA4_fund_transfer_intra                     PASSED
+test_QABCAA5_virtual_account_payment.py::test_QABCAA5_virtual_account_payment             PASSED
+test_QABCAA6_bug_tampered_signature.py::test_QABCAA6_bug_tampered_signature               PASSED
+test_QABCAA7_bug_replay_duplicate_transfer.py::test_QABCAA7_bug_replay_duplicate_transfer PASSED
 
-============================== 7 passed in 0.77s ==============================
+============================== 7 passed in 0.69s ==============================
 ```
 
 ---
@@ -213,4 +213,5 @@ test_QABCA7_bug_replay_duplicate_transfer.py::test_QABCA7_bug_replay_duplicate_t
 ## 👤 Author
 - **Alif Nugraha**
 - GitHub: [@AlifNugraha17](https://github.com/AlifNugraha17)
+- LinkedIn: [Alif Nugraha](https://www.linkedin.com/in/alifnugraha/)
 - Quality Assurance | Backend API Automation | Python | BCA Open Banking | SNAP BI

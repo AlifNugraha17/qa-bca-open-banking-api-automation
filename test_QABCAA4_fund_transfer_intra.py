@@ -1,5 +1,5 @@
 """
-TIKET JIRA: QABCA-4
+TIKET JIRA: QABCAA-4
 Summary: [Fund Transfer] Verify intra-bank transfer execution between BCA accounts with unique idempotency key
 Endpoint: POST /banking/v3/corporates/{CorporateID}/transfers
 """
@@ -19,9 +19,9 @@ if sys.platform == "win32":
         pass
 
 
-def test_QABCA4_fund_transfer_intra():
+def test_QABCAA4_fund_transfer_intra():
     print("\n=======================================================================")
-    print("🚀 MENJALANKAN TEST TIKET QABCA-4: Transfer Dana Antar Rekening BCA")
+    print("🚀 MENJALANKAN TEST TIKET QABCAA-4: Transfer Dana Antar Rekening BCA")
     print("=======================================================================")
 
     start_bca_mock_server(port=8080)
@@ -81,4 +81,4 @@ def test_QABCA4_fund_transfer_intra():
 
 
 if __name__ == "__main__":
-    test_QABCA4_fund_transfer_intra()
+    test_QABCAA4_fund_transfer_intra()

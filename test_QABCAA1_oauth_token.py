@@ -1,5 +1,5 @@
 """
-TIKET JIRA: QABCA-1
+TIKET JIRA: QABCAA-1
 Summary: [OAuth 2.0] Verify successful B2B client credentials authorization and bearer token generation
 Endpoint: POST /api/oauth/token
 """
@@ -18,9 +18,9 @@ if sys.platform == "win32":
         pass
 
 
-def test_QABCA1_oauth_token():
+def test_QABCAA1_oauth_token():
     print("\n=======================================================================")
-    print("🚀 MENJALANKAN TEST TIKET QABCA-1: OAuth 2.0 Token Generation (BCA API)")
+    print("🚀 MENJALANKAN TEST TIKET QABCAA-1: OAuth 2.0 Token Generation (BCA API)")
     print("=======================================================================")
 
     # 1. Pastikan BCA Mock Core Server berjalan
@@ -78,4 +78,4 @@ def test_QABCA1_oauth_token():
 
 
 if __name__ == "__main__":
-    test_QABCA1_oauth_token()
+    test_QABCAA1_oauth_token()
